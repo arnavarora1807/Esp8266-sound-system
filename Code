@@ -1,0 +1,42 @@
+int baseline = 593;     // your calibrated value
+int threshold = 20;     // tuned threshold
+
+#define BUZZER D5
+#define LED D6
+
+void setup() {
+  Serial.begin(9600);
+  
+  pinMode(BUZZER, OUTPUT);
+  pinMode(LED, OUTPUT);
+}
+
+void loop() {
+  int val = analogRead(A0);        // read sound sensor
+  int diff = abs(val - baseline);  // variation from baseline
+
+  Serial.print("Value: ");
+  Serial.print(val);
+  Serial.print(" | Diff: ");
+  Serial.println(diff);
+
+  if (diff >= threshold) {
+    Serial.println("🔊 Sound detected in the library.");
+
+    digitalWrite(LED, HIGH);   // LED ON
+
+    // 🔥 buzzer (for passive buzzer)
+    tone(BUZZER, 1000);        // 1kHz sound
+    delay(200);
+    noTone(BUZZER);
+
+  } 
+  else {
+    Serial.println("🔇 No sound detected in the library.");
+
+    digitalWrite(LED, LOW);    // LED OFF
+    noTone(BUZZER);
+  }
+
+  delay(200);
+}
